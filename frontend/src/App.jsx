@@ -27,6 +27,7 @@ function App() {
 
   return (
     <div className="container">
+      <h1 style={{color: 'blue'}}>Chiều Thứ Hai - Ca 3</h1>
       <h1>Bài Thi Cuối Kỳ</h1>
       <p className="subtitle">Hệ thống quản lý mã nguồn mở</p>
       
