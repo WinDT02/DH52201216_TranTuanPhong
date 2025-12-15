@@ -1,20 +1,43 @@
+/* frontend/src/App.jsx */
 import { useEffect, useState } from 'react';
+import './App.css';
 
 function App() {
-  const [msg, setMsg] = useState("Đang tải dữ liệu...");
+  const [msg, setMsg] = useState("Đang kết nối tới máy chủ...");
+  const [status, setStatus] = useState("loading"); // loading | success | error
 
   useEffect(() => {
-    fetch('http://localhost:3000')
-      .then(res => res.json())
-      .then(data => setMsg(data.message))
-      .catch(() => setMsg("Lỗi kết nối Backend!"));
+    // Giả lập độ trễ 1 giây để nhìn thấy hiệu ứng loading
+    setTimeout(() => {
+      fetch('http://localhost:3000')
+        .then(res => {
+          if (!res.ok) throw new Error('Lỗi phản hồi từ server');
+          return res.json();
+        })
+        .then(data => {
+          setMsg(data.message);
+          setStatus("success");
+        })
+        .catch(() => {
+          setMsg("Mất kết nối tới Backend! Hãy kiểm tra Docker.");
+          setStatus("error");
+        });
+    }, 1000);
   }, []);
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>BÀI TẬP CUỐI KỲ</h1>
-      <h2 style={{ color: 'green' }}>{msg}</h2>
+    <div className="container">
+      <h1>Bài Thi Cuối Kỳ</h1>
+      <p className="subtitle">Hệ thống quản lý mã nguồn mở</p>
+      
+      <div className={`status-box ${status}`}>
+        {status === 'loading' && '⏳ '} 
+        {status === 'success' && '✅ '} 
+        {status === 'error' && '❌ '}
+        {msg}
+      </div>
     </div>
   );
 }
+
 export default App;
